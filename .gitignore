@@ -1,0 +1,19 @@
+# Latex build files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.log
+*.out
+*.synctex
+*.synctex.gz
+*.m~
+*~
+*.bak
+
+*.DS_Store
+.DS_Store
+
+
+*.pdf
+

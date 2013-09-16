@@ -3,7 +3,7 @@
 
 %------------------------------------------------------------
 %
-\documentclass[a4paper,twoside,10pt]{article}%
+\documentclass{article}%
 %Options -- Point size:  10pt (default), 11pt, 12pt
 %        -- Paper size:  letterpaper (default), a4paper, a5paper, b5paper
 %                        legalpaper, executivepaper
@@ -45,37 +45,135 @@
 
 \geometry{top=3cm,bottom=3cm,left=2.5cm,right=3.5cm}
 
-\newcommand\iref{\textcolor{red}{ref}}
+% \newcommand\iref{\textcolor{red}{ref}}
 \newcommand\red{\textcolor{red}}
 
 \graphicspath{{fig/}}
 
 \hypersetup{colorlinks,linkcolor=black,filecolor=black,urlcolor=black,citecolor=black} 
 
+\newcommand{\rich}[1]{\textcolor{green}{#1}}
+\newcommand{\dean}[1]{\textcolor{blue}{#1}}
 
+\title{Tracking Physiological Changes in an In-Vivo Model of Epilepsy: A Model-Based Approach}
+\date{\today}
+\author{Richard S. Balson, Dean R. Freestone, Anthony N. Burkitt, Mark J. Cook \\ and David B. Grayden}
 
 \begin{document}
-
-\title{Tracking physiological changes in an in-vivo model of Epilepsy: A Model-Based Approach}
-\author{R.S. Balson}
-%\date{}
 \maketitle
 
-%\ref{sec:Lit}  Reference a labelled section "lit".
+\section{Introduction}
 
-\include{Abstract}
+\red{Estimate model parameters from a neural mass model of the hippocampus.}
 
-\include{Introduction}
+\red{To improve the understanding of epilepsy} 
 
-\include{Methods}
+\red{How has this been achieved previously?}
 
-\include{Results}
+\red{Introduction to neural mass model, freeman, jansen etc}
 
-\include{Discussion}
+\red{What is the output of the model and why}
 
-\include{Conclusion}
+\red{Is a neural mass model a good model}
 
-\include{AppendixA}
+\red{Inadequacy of jansen model and intro to the wendling model}
+
+\red{This model is capable of replicating key characteristics observed in EEG prior to and during seizure.}
+
+\red{Is the Wendling model a good model}
+
+\red{Previous work on estimating the neural mass model of the hippocampus has been done using a genetic algorithm.}
+
+\red{Estimation of the neural mass model (Genetic Algorithm)}
+
+\red{Kalman filter}
+
+\red{Why the Kalman filter}
+
+\red{What is being done, and why is it better or different?}
+
+\red{What is being done with the UKF}
+
+\red{Structure of the paper}
+
+\red{Model estimation and accuracy for real data}
+
+\section{Methods}
+
+\red{ What we are doing in this paper}
+
+
+\subsection{Neural Mass Model} 
+
+\begin{equation}\label{eq:conv_eq}
+    v_n(t) = \frac{\alpha_{mn}}{\tau_{mn}}\int_{-\infty}^t  h_{mn}(t-t')g(v_m(t')) \,\mathrm{d}t' + v_r,
+\end{equation}
+where $\alpha_{mn}$ is ..., $h_{mn}(t)$ is..., $\tau_{mn}$ is .... , $v_r$ is
+\begin{equation}
+    h_{mn}(t) = \eta(t)t\exp\left(-\frac{t}{\tau_{mn}}\right),
+\end{equation}
+where $\eta(t)$ is the Heaviside step function. An example of a PSRK can be seen in ....  
+
+The firing rate of each population ... 
+\begin{align}\label{eq:sigmoid}
+    g\left(v_n(t)\right) =& \frac{1}{1+\exp{\left(\varsigma_n\left(v_{0n} - v_n(t)\right)\right)}}.
+\end{align}
+The quantity $\varsigma_n$ describes ... and $v_{0n}$ .... An example of the sigmoidal activation function .... \dean{Write something about $v_r$ being lumped into $v_0$.}
+
+The convolution in Equation~\ref{eq:conv_eq} can also be written as the ordinary differential equation (ODE)
+\begin{equation}\label{eq:2ndOrder}
+    \mathrm{D}v_n(t) = \frac{\mathrm{d}^2 v_n(t)}{\mathrm{d}t^2} + \frac{2}{\tau_{mn}}\frac{\mathrm{d} v_n(t)}{\mathrm{d}t} + \frac{1}{\tau_{mn}^2} v_n(t) = \frac{\alpha_{mn}}{\tau_{mn}} g(v_m(t)),
+\end{equation}
+where $\mathrm{D}$ .... Equation~\ref{eq:2ndOrder} can be written ...
+\begin{equation} \label{eq:2ndOrderNMM}
+    \frac{\mathrm{d} v_n(t)}{\mathrm{d}t} = z_n(t),\,\,\,\,\,    \frac{\mathrm{d}z_n(t)}{\mathrm{d}t} = \frac{\alpha_{mn}}{\tau_{mn}} g(v_m(t)) - \frac{2}{\tau_{mn}}z_n(t) - \frac{1}{\tau_{mn}^2} v_n(t),
+\end{equation}
+where $z_n(t)$ is .... This forms the basis of a state-space model ....
+
+
+\subsection{Estimation}
+
+\red{Generic description on a nonlinear system}
+
+\red{Introduction to the UKF}
+
+\red{The unscented filter}
+
+\red{How states are predicted using the unscented transform}
+
+\red{Definition of slow state matrix and its dynamics}
+
+\red{Intialisation of UKF for stationary parameters}
+
+
+\red{Intialisation of UKF for varying parameters}
+
+\red{Estimation of model input mean}
+
+\red{Robustness test}
+
+\section{Results}
+
+\section{Discussion}
+
+\red{Why estimation}
+
+\red{Effect of stochastic input}
+
+\red{Estimation of model parameters}
+
+\red{Initialisation error}
+
+\red{Observation Noise}
+
+\red{Parameters varying}
+
+% 
+% \include{Discussion}
+% 
+% \include{Conclusion}
+% 
+% \include{AppendixA}
 
 \bibliographystyle{apalike}
 \bibliography{RealData}
