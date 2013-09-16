@@ -105,10 +105,12 @@
 
 \subsection{Neural Mass Model} 
 
+All neural field models can be described by a temporal and spatial response curve, and a function that relates membrane potentials to firing rates. For neural mass models the spatial element is removed from this general description such that
+
 \begin{equation}\label{eq:conv_eq}
     v_n(t) = \frac{\alpha_{mn}}{\tau_{mn}}\int_{-\infty}^t  h_{mn}(t-t')g(v_m(t')) \,\mathrm{d}t' + v_r,
 \end{equation}
-where $\alpha_{mn}$ is ..., $h_{mn}(t)$ is..., $\tau_{mn}$ is .... , $v_r$ is
+where $\alpha_{mn}$ is a measure of the connectivity and synaptic strength between populations $m$ and $n$, $h_{mn}(t)$ is the temporal response curve, commonly referred to as a post synaptic response kernel, $\tau_{mn}$ is the time constant which indicates the average prorogation delay between populations $m$ and $n$, $v_r$ is the resting membrane potential.
 \begin{equation}
     h_{mn}(t) = \eta(t)t\exp\left(-\frac{t}{\tau_{mn}}\right),
 \end{equation}
@@ -118,17 +120,17 @@ The firing rate of each population ...
 \begin{align}\label{eq:sigmoid}
     g\left(v_n(t)\right) =& \frac{1}{1+\exp{\left(\varsigma_n\left(v_{0n} - v_n(t)\right)\right)}}.
 \end{align}
-The quantity $\varsigma_n$ describes ... and $v_{0n}$ .... An example of the sigmoidal activation function .... \dean{Write something about $v_r$ being lumped into $v_0$.}
+The quantity $\varsigma_n$ describes the gradient of the sigmoidal activation function and $v_{0n}$ the membrane potential that results in half the maximum firing rate. The constant $v_{0n}$ is a lumped parameter, that includes the effect of the resting membrane potential on the activation curve. An example of the sigmoidal activation function .... \dean{Write something about $v_r$ being lumped into $v_0$.}
 
 The convolution in Equation~\ref{eq:conv_eq} can also be written as the ordinary differential equation (ODE)
 \begin{equation}\label{eq:2ndOrder}
     \mathrm{D}v_n(t) = \frac{\mathrm{d}^2 v_n(t)}{\mathrm{d}t^2} + \frac{2}{\tau_{mn}}\frac{\mathrm{d} v_n(t)}{\mathrm{d}t} + \frac{1}{\tau_{mn}^2} v_n(t) = \frac{\alpha_{mn}}{\tau_{mn}} g(v_m(t)),
 \end{equation}
-where $\mathrm{D}$ .... Equation~\ref{eq:2ndOrder} can be written ...
+where $\mathrm{D}$ is a differential operator. Equation~\ref{eq:2ndOrder} can be written as two partial differential equations
 \begin{equation} \label{eq:2ndOrderNMM}
     \frac{\mathrm{d} v_n(t)}{\mathrm{d}t} = z_n(t),\,\,\,\,\,    \frac{\mathrm{d}z_n(t)}{\mathrm{d}t} = \frac{\alpha_{mn}}{\tau_{mn}} g(v_m(t)) - \frac{2}{\tau_{mn}}z_n(t) - \frac{1}{\tau_{mn}^2} v_n(t),
 \end{equation}
-where $z_n(t)$ is .... This forms the basis of a state-space model ....
+where $z_n(t)$ is the time derivative of $v_n(t)$. This forms the basis of a state-space model for all neural masses.
 
 
 \subsection{Estimation}
