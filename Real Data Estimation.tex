@@ -101,6 +101,14 @@
 
 \section{Methods}
 
+\subsection{Animal Model of Epilepsy}
+
+In this study we make use of an \textsl{in vivo} model of temporal lobe epilepsy. In particular, we consider the tetanus toxin model of temporal lobe epilepsy, where the hippocampus is the seizure focus. This particular model was chosen as it has a localised seizure focus, and results in the animals having seizure events that are similar in terms of electrophysiology and clinical aspects to human patients with temporal lobe epilepsy. 
+
+For this particular \textsl{in vivo} model, Sprague Dawley rats that weigh between 300-400 grams are used, with the approval of an ethics committee. Tetanus toxin is injected into the hippocampus at the location of -3.5mm anterior-posterior (AP), 3mm medial lateral and -3.5mm dorsal ventral (DV). This location is within the CA3 region of the hippocampus (Figure~\ref{fig: TetLoc}). Two depth electrodes are placed in the same location to record local field potentials from the seizure focus. A further three burr holes are made, one over the cerebellum, and two over the right hemisphere of the brain. Three electrodes are placed in the burr holes: the cerebellar electrode is used as a reference for all differential recordings, and the two electrodes over the right hemisphere are used to record local filed potentials from the surface of the brain. These electrodes are then connected to a pedestal and held in place by dental cement. The animals are left to recover for seven days, and are then recorded from 24 hours a day for six weeks.
+
+ 
+
 \red{ What we are doing in this paper}
 
 
@@ -115,27 +123,14 @@ where $\alpha_{mn}$ is a measure of the connectivity and synaptic strength betwe
 \begin{equation}
     h_{mn}(t) = \eta(t)t\exp\left(-\frac{t}{\tau_{mn}}\right),
 \end{equation}
-where $\eta(t)$ is the Heaviside step function. An example of a post synaptic response kernel can be seen in Figure~\ref{fig: FR2PSP_final}
+where $\eta(t)$ is the Heaviside step function. An example of a post synaptic response kernel can be seen in Figure~\ref{fig: Simple}
 
-  \begin{figure}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\centering
-		\includegraphics{FR2PSPNaming.pdf}
-	\caption{Impulse response of the firing rate to aggregate membrane potential function. The time constants and synaptic gains used for this figure correspond to that of background EEG~\citep{wendling2002epileptic}. The peaks of each response occur at time $\tau_{b}$ and the maximum membrane potential is $\exp(-1)G_{b}$, where $b$ is replaced by p, s and f for excitatory, and slow and fast inhibitory time constants and gains, respectively. The inhibitory populations response is shown as negative, as this is its net effect on the system.}
-	\label{fig: FR2PSP_final}
-\end{figure} %
 
 The firing rate of each population is determined from an asymmetric sigmoid activation curve. The sigmoid function translates the membrane potential of a population to its effective firing rate.
 \begin{align}\label{eq:sigmoid}
     g\left(v_n(t)\right) =& \frac{1}{1+\exp{\left(\varsigma_n\left(v_{0n} - v_n(t)\right)\right)}}.
 \end{align}
-The quantity $\varsigma_n$ describes the gradient of the sigmoidal activation function and $v_{0n}$ the membrane potential that results in half the maximum firing rate. The constant $v_{0n}$ is a lumped parameter, that includes the effect of the resting membrane potential on the activation curve. An example of the sigmoidal activation function is demonstrated in Figure~\ref{fig: PSP2FR_final}.
-
-  \begin{figure}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\centering
-		\includegraphics{PSP2FRNaming.pdf}
-	\caption{Sigmoidal activation curve.}
-	\label{fig: PSP2FR_final}
-\end{figure} %
+The quantity $\varsigma_n$ describes the gradient of the sigmoidal activation function and $v_{0n}$ the membrane potential that results in half the maximum firing rate. The constant $v_{0n}$ is a lumped parameter, that includes the effect of the resting membrane potential on the activation curve. An example of the sigmoidal activation function is demonstrated in Figure~\ref{fig: Simple}.
 
  \dean{Write something about $v_r$ being lumped into $v_0$.}
 
@@ -154,7 +149,7 @@ The simplest possible neural mass model is one that takes an input firing rate, 
 \begin{figure}
 	\centering
 		\includegraphics{Biological_Response.pdf}
-	\caption{Simple Model}
+	\caption{Simple Neural Mass Model. In \textbf{C} the impulse response of the firing rate to aggregate membrane potential function is demonstrated. The time constants and synaptic gains used for this figure correspond to that of background EEG~\citep{wendling2002epileptic}. The peaks of each response occur at time $\tau_{b}$ and the maximum membrane potential is $\exp(-1)G_{b}$, where $b$ is replaced by p, s and f for excitatory, and slow and fast inhibitory time constants and gains, respectively. The inhibitory populations response is shown as negative, as this is its net effect on the system.}
 	\label{fig: Simple}
 \end{figure}
 
