@@ -149,14 +149,14 @@ The simplest possible neural mass model is one that takes an input firing rate, 
 \begin{figure}
 	\centering
 		\includegraphics{Biological_Response.pdf}
-	\caption{Simple Neural Mass Model. In \textbf{C} the impulse response of the firing rate to aggregate membrane potential function is demonstrated. The time constants and synaptic gains used for this figure correspond to that of background EEG~\citep{wendling2002epileptic}. The peaks of each response occur at time $\tau_{b}$ and the maximum membrane potential is $\exp(-1)G_{b}$, where $b$ is replaced by p, s and f for excitatory, and slow and fast inhibitory time constants and gains, respectively. The inhibitory populations response is shown as negative, as this is its net effect on the system.}
+	\caption{Simple Neural Mass Model. (\textbf{A}) An example of a simple neural mass model. This model consists of a single neural population - the triangle - and a single synapse - the square block. (\textbf{B}) Temporal response curve for a synapse. The black line demonstrates the response of a synapse to an impulse response. The time constant ($\tau$) and synaptic gain ($\alpha$) are demonstrated in this figure. The peak response of this function is $\alpha \exp(-1)$ and the time at which this peak occurs is equal to $\tau$. \textbf{C} Somatic response curve. The black line indicates the function $g(v)$ which is a sigmoidal activation curve. This function demonstrates the resulting normalized firing rate produced by a neural population as a function of the membrane potential over it. In this figure $v_{0}$ is the membrane potential at which the firing rate produced is half its maximum.}
 	\label{fig: Simple}
 \end{figure}
 
  \begin{figure}
  	\centering
  		\includegraphics{fig/Biological_Model.pdf}
- 	\caption{Graphical Description of the Wendling Model.}
+ 	\caption{Graphical Description of the Neural Mass Model of the Hippocampus. (\textbf{A}) Graphical Description of the neural mass model of the hippocampus. }
  	\label{fig: Biological}
  \end{figure}
 
@@ -190,6 +190,13 @@ The simplest possible neural mass model is one that takes an input firing rate, 
 \red{Robustness test}
 
 \section{Results}
+
+\begin{figure}
+ 	\centering
+ 		\includegraphics{fig/EEG.pdf}
+ 	\caption{Estimation Results.}
+ 	\label{fig: EEG}
+ \end{figure}
 
 \begin{figure}
  	\centering
