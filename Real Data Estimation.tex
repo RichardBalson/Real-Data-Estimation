@@ -164,23 +164,23 @@ The simplest possible neural mass model is one that takes an input firing rate, 
 
 \subsection{Estimation}
 
-\red{Generic description on a nonlinear system}
-
-A generic nonlinear system can be defined in terms of a state and observation function \begin{align}
-\label{eqn: NonlinEstS}
-\mathbf{\dot{x}}(t) &= \mathbf{A}(\mathbf{x}(t),\mathbf{\theta}(t)) + \mathbf{B}(\mathbf{u}(t)) + \mathbf{n}(t)\\
-\label{eqn: NonlinEstO}
-\mathbf{y}(t)  &= \mathbf{C}(\mathbf{x}(t)) +\mathbf{D}(\mathbf{u}(t))+\mathbf{r}(t),
-\end{align} where boldface is used to indicate a matrix or vector. Fr the case of a nonlinear system boldface notation can also indicate a matrix of functions. Here, $\mathbf{x}(t)$ is the state vector and $\dot{\mathbf{x}}(t)$ is its derivative, where
-\[ \mathbf{\dot{x}}(t) = \left[ \begin{array}[pos]{c}
-\dot{x}_{1}(t)\\
-\vdots \\
-\dot{x}_{n}(t) \end{array} \right] .\] $\mathbf{A}$ and $\mathbf{B}$ are the state and input matrices, respectively and $\mathbf{u}(t)$ is the input to the model. $\mathbf{C}$ and $\mathbf{D}$ are the output and input-to-output matrices, respectively. The output of the model is $\mathbf{y}(t)$ with $\mathbf{n}(t)$ the model uncertainty, and $\mathbf{r}(t)$ the observation noise. Here, $\mathbf{n}(t)$ is a bound on the expected model error, and $\mathbf{r}(t)$ describes the noise in the observations. Both $\mathbf{n}(t)$ and $\mathbf{r}(t)$ are zero mean Gaussian distributed with a system dependant variance. 
+%\red{Generic description on a nonlinear system}
+%
+%A generic nonlinear system can be defined in terms of a state and observation function \begin{align}
+%\label{eqn: NonlinEstS}
+%\mathbf{\dot{x}}(t) &= \mathbf{A}(\mathbf{x}(t),\mathbf{\theta}(t)) + \mathbf{B}(\mathbf{u}(t)) + \mathbf{n}(t)\\
+%\label{eqn: NonlinEstO}
+%\mathbf{y}(t)  &= \mathbf{C}(\mathbf{x}(t)) +\mathbf{D}(\mathbf{u}(t))+\mathbf{r}(t),
+%\end{align} where boldface is used to indicate a matrix or vector. Fr the case of a nonlinear system boldface notation can also indicate a matrix of functions. Here, $\mathbf{x}(t)$ is the state vector and $\dot{\mathbf{x}}(t)$ is its derivative, where
+%\[ \mathbf{\dot{x}}(t) = \left[ \begin{array}[pos]{c}
+%\dot{x}_{1}(t)\\
+%\vdots \\
+%\dot{x}_{n}(t) \end{array} \right] .\] $\mathbf{A}$ and $\mathbf{B}$ are the state and input matrices, respectively and $\mathbf{u}(t)$ is the input to the model. $\mathbf{C}$ and $\mathbf{D}$ are the output and input-to-output matrices, respectively. The output of the model is $\mathbf{y}(t)$ with $\mathbf{n}(t)$ the model uncertainty, and $\mathbf{r}(t)$ the observation noise. Here, $\mathbf{n}(t)$ is a bound on the expected model error, and $\mathbf{r}(t)$ describes the noise in the observations. Both $\mathbf{n}(t)$ and $\mathbf{r}(t)$ are zero mean Gaussian distributed with a system dependant variance. 
 
 
 \red{Introduction to the UKF}
 
-Estimation techniques attempt to estimate the model states given some observation. There are numerous techniques to achieve this, most of which are for linear systems. In this paper we make use of a nonlinear estimation technique, the unscented Kalman filter. This method consists of two steps: prediction and correction. The prediction step makes use of an unscented transform (Figure~\ref{fig: UKF}) to approximate the mean and covariance of the model states after they have been propagated through the system. The correction step uses this information to determine the most likely states that best describes the both the observation and the prediction. This step makes use of the expected error on both the observations and the states to determine a weighting for each (Figure~\ref{fig: UKF}).
+Estimation techniques attempt to approximate the model states given some observation. There are numerous techniques to achieve this, most of which are for linear systems. In this paper we make use of a nonlinear estimation technique, the unscented Kalman filter. This method consists of two steps: prediction and correction. The prediction step makes use of an unscented transform (Figure~\ref{fig: UKF}) to approximate the mean and covariance of the model states after they have been propagated through the system. The correction step uses this information to determine the most likely states that best describes the both the observation and the prediction. This step makes use of the expected error on both the observations and the states to determine a weighting for each (Figure~\ref{fig: UKF}).
 
  \begin{figure}
  	\centering
@@ -189,59 +189,44 @@ Estimation techniques attempt to estimate the model states given some observatio
  	\label{fig: UKF}
  \end{figure}
 
-\red{The unscented filter}
+%\red{The unscented filter}
 
-The unscented filter is completely described by a state's mean and covariance such that:\begin{align}
-\label{eqn: Unscented_Transform1}
-\mathbf{\mathcal{X}}_{n} &= \mathbf{\overline{x}}_{k} + (\sqrt{\kappa+D_{x}\mathbf{P_{xx,k}}})_{n} \quad n=1,\hdots,D_x\\
-\label{eqn: Unscented_Transform2}
-\mathbf{\mathcal{X}}_{n+D_{x}} &= \mathbf{\overline{x}}_{k} - (\sqrt{\kappa+D_{x}\mathbf{P_{xx,k}}})_{n} \quad n=1,\hdots,D_x,\\
-\label{eqn: Unscented_TransformY1}
-\mathbf{\mathcal{Y}}_{n} &= \mathbf{\overline{y}}_{k} + (\sqrt{\kappa+D_{y}\mathbf{P_{yy,k}}})_{n} \quad n=1,\hdots,D_y\\
-\label{eqn: Unscented_TransformY2}
-\mathbf{\mathcal{Y}}_{n+D_{y}} &= \mathbf{\overline{y}}_{k} - (\sqrt{\kappa+D_{y}\mathbf{P_{yy,k}}})_{n} \quad n=1,\hdots,D_y,
-\end{align} where $\mathbf{\overline{x}}_{k}$ and $\mathbf{\overline{y}}_{k}$ are the current state estimate and observation. $(\sqrt{\cdot})_{n}$ denotes the $n$th row of the matrix square root. $D_{x}$ and $D_{y}$ indicate the number of states in the system and the number of observations. Covariance matrices, $\mathbf{P_{xx,k}}$ and $\mathbf{P_{yy,k}}$, are the expected error of the current state and observation. The points $\mathbf{\mathcal{X}}$ are called sigma points and represent the states one standard deviation away for the estimated mean. The term $\kappa$ is a predefined constant, which determines the relative effect of the propagation of the mean. If $\kappa$ is equal to zero then the system mean is not propagated as a sigma point. However, if $\kappa$ is greater than zero then \begin{align}
-\mathbf{\mathcal{X}}_{0} &= \mathbf{\overline{x}}_{k}.
-\end{align} Therefore, 2$D_{x}$ sigma points are assigned when $\kappa$ is zero and 2$D_{x}$+1 sigma points are assigned when it is greater than zero. The sigma points are propagated through the system in order to update the expectation about the state mean and error: \begin{align}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\mathbf{\mathcal{X}}_{n,k+1} &= \mathbf{\mathcal{X}}_{n,k}+ T(\mathbf{A}(\mathbf{\mathcal{X}}_{n,k}) +\mathbf{B}(\mathbf{u}_{k})) +\sqrt{T}{n}_{k}\\
-\overline{\mathbf{x}}_{k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} \mathbf{\mathcal{X}}_{n,k+1}\\
-\mathbf{P}_{xx,k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} (\mathbf{\mathcal{X}}_{n,k+1} -\mathbf{\overline{x}}_{k+1}^{-})(\mathbf{\mathcal{X}}_{n,k+1}-\mathbf{\overline{x}}_{k+1}^{-})^{\top} + \mathbf{Q}.%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\end{align} $\overline{\mathbf{x}}_{k+1}^{-}$ and $\mathbf{P}_{xx,k+1}^{-}$ are the predictions for the state and state covariance matrices. The negative superscript is used to indicate an uncorrected prediction. The term $\mathbf{Q}$ is the expectation of the model error $n_{k}$ and $(\cdot)^{\top}$ indicates the transpose. It is now possible to make a prediction about the observation at sample $k+1$ by propagating the sigma points through Equation~(\ref{eqn: YProp}) \begin{align} %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\mathbf{\mathcal{Y}}_{n,k+1} &= \mathbf{\mathcal{Y}}_{n,k} + T(\mathbf{C}(\mathbf{\mathcal{X}}_{n,k+1})+ \mathbf{D}(\mathbf{u}_{k}))+ \sqrt{T}\mathbf{r}_{k}\\
-\overline{\mathbf{y}}_{k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} \mathbf{\mathcal{Y}}_{n,k+1}\\
-\label{eqn: statecovg}
-\mathbf{P}_{xy,k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} (\mathbf{\mathcal{X}}_{n,k+1}-\overline{\mathbf{x}}_{n,k+1}) (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-})^{\top}\\
-\mathbf{P}_{yy,k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-}) (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-})^{\top} +\mathbf{R},%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\end{align} where $\overline{\mathbf{y}}_{k+1}^{-}$ and $\mathbf{P}_{yy,k+1}^{-}$ are the predictions for the model output and its covariance, respectively. $\mathbf{P}_{xy,k+1}^{-}$ is the covariance matrix of the states and observations and $\mathbf{R}$ is the expectation of the observation error $\mathbf{r}_{k}$.
-
-
-\red{How states are predicted using the unscented transform}
-
-The predictions of the states,$\overline{\mathbf{x}}_{k+1}^{-}$, and observations, $\overline{\mathbf{y}}_{k+1}^{-}$, now need to be corrected based on the observations. This is achieved by determining the Kalman gain and updating the predictions based on the current observation: \begin{align}
-\mathbf{K} &= \mathbf{P}_{xy,k+1}^{-}(\mathbf{P}_{yy,k+1}^{-})^{-1}\\
-\overline{\mathbf{x}}_{k+1} &= \overline{\mathbf{x}}_{k+1}^{-} + \mathbf{K}(\mathbf{y}_{k+1}-\overline{\mathbf{y}}_{k+1}^{-})\\
-\mathbf{P}_{xx,k+1} &= \mathbf{P}_{xx,k+1}^{-} - \mathbf{K}(\mathbf{P}_{xy,k+1}^{-})^{\top},
-\end{align} where $\mathbf{y}_{k}$ is the observation, $\overline{\mathbf{x}}_{k+1}$ is the corrected estimate of the state and $\mathbf{P}_{xx,k+1}$ is the estimate of its error. This set of equations describes the UKF and how it can be used to estimate states. However, for this study, estimation of states and parameters is required (dual estimation).
+%The unscented filter is completely described by a state's mean and covariance such that:\begin{align}
+%\label{eqn: Unscented_Transform1}
+%\mathbf{\mathcal{X}}_{n} &= \mathbf{\overline{x}}_{k} + (\sqrt{\kappa+D_{x}\mathbf{P_{xx,k}}})_{n} \quad n=1,\hdots,D_x\\
+%\label{eqn: Unscented_Transform2}
+%\mathbf{\mathcal{X}}_{n+D_{x}} &= \mathbf{\overline{x}}_{k} - (\sqrt{\kappa+D_{x}\mathbf{P_{xx,k}}})_{n} \quad n=1,\hdots,D_x,\\
+%\label{eqn: Unscented_TransformY1}
+%\mathbf{\mathcal{Y}}_{n} &= \mathbf{\overline{y}}_{k} + (\sqrt{\kappa+D_{y}\mathbf{P_{yy,k}}})_{n} \quad n=1,\hdots,D_y\\
+%\label{eqn: Unscented_TransformY2}
+%\mathbf{\mathcal{Y}}_{n+D_{y}} &= \mathbf{\overline{y}}_{k} - (\sqrt{\kappa+D_{y}\mathbf{P_{yy,k}}})_{n} \quad n=1,\hdots,D_y,
+%\end{align} where $\mathbf{\overline{x}}_{k}$ and $\mathbf{\overline{y}}_{k}$ are the current state estimate and observation. $(\sqrt{\cdot})_{n}$ denotes the $n$th row of the matrix square root. $D_{x}$ and $D_{y}$ indicate the number of states in the system and the number of observations. Covariance matrices, $\mathbf{P_{xx,k}}$ and $\mathbf{P_{yy,k}}$, are the expected error of the current state and observation. The points $\mathbf{\mathcal{X}}$ are called sigma points and represent the states one standard deviation away for the estimated mean. The term $\kappa$ is a predefined constant, which determines the relative effect of the propagation of the mean. If $\kappa$ is equal to zero then the system mean is not propagated as a sigma point. However, if $\kappa$ is greater than zero then \begin{align}
+%\mathbf{\mathcal{X}}_{0} &= \mathbf{\overline{x}}_{k}.
+%\end{align} Therefore, 2$D_{x}$ sigma points are assigned when $\kappa$ is zero and 2$D_{x}$+1 sigma points are assigned when it is greater than zero. The sigma points are propagated through the system in order to update the expectation about the state mean and error: \begin{align}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\mathbf{\mathcal{X}}_{n,k+1} &= \mathbf{\mathcal{X}}_{n,k}+ T(\mathbf{A}(\mathbf{\mathcal{X}}_{n,k}) +\mathbf{B}(\mathbf{u}_{k})) +\sqrt{T}{n}_{k}\\
+%\overline{\mathbf{x}}_{k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} \mathbf{\mathcal{X}}_{n,k+1}\\
+%\mathbf{P}_{xx,k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} (\mathbf{\mathcal{X}}_{n,k+1} -\mathbf{\overline{x}}_{k+1}^{-})(\mathbf{\mathcal{X}}_{n,k+1}-\mathbf{\overline{x}}_{k+1}^{-})^{\top} + \mathbf{Q}.%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\end{align} $\overline{\mathbf{x}}_{k+1}^{-}$ and $\mathbf{P}_{xx,k+1}^{-}$ are the predictions for the state and state covariance matrices. The negative superscript is used to indicate an uncorrected prediction. The term $\mathbf{Q}$ is the expectation of the model error $n_{k}$ and $(\cdot)^{\top}$ indicates the transpose. It is now possible to make a prediction about the observation at sample $k+1$ by propagating the sigma points through Equation~(\ref{eqn: YProp}) \begin{align} %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\mathbf{\mathcal{Y}}_{n,k+1} &= \mathbf{\mathcal{Y}}_{n,k} + T(\mathbf{C}(\mathbf{\mathcal{X}}_{n,k+1})+ \mathbf{D}(\mathbf{u}_{k}))+ \sqrt{T}\mathbf{r}_{k}\\
+%\overline{\mathbf{y}}_{k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} \mathbf{\mathcal{Y}}_{n,k+1}\\
+%\label{eqn: statecovg}
+%\mathbf{P}_{xy,k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} (\mathbf{\mathcal{X}}_{n,k+1}-\overline{\mathbf{x}}_{n,k+1}) (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-})^{\top}\\
+%\mathbf{P}_{yy,k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-}) (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-})^{\top} +\mathbf{R},%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\end{align} where $\overline{\mathbf{y}}_{k+1}^{-}$ and $\mathbf{P}_{yy,k+1}^{-}$ are the predictions for the model output and its covariance, respectively. $\mathbf{P}_{xy,k+1}^{-}$ is the covariance matrix of the states and observations and $\mathbf{R}$ is the expectation of the observation error $\mathbf{r}_{k}$.
 
 
-\red{Definition of slow state matrix and its dynamics}
+%\red{How states are predicted using the unscented transform}
 
-The parameters that are being estimated are $G_{\mathrm{p},k}$, $G_{\mathrm{e},k}$, $G_{\mathrm{s},k}$ and $G_{\mathrm{f},k}$, where it is assumed that \begin{align}
-G_{\mathrm{p},k} = G_{\mathrm{e},k}.
-\end{align} Therefore, three parameters need to be estimated, and a parameter matrix is defined
-\[ \mathbf{\theta}_{k} = \left[ \begin{array}[pos]{c}
-G_{\mathrm{p},k}\\
-G_{\mathrm{s},k} \\
-G_{\mathrm{f},k} \end{array} \right] .\] The original state matrix is then augmented with the parameter matrix 
-\[ \mathbf{x}_{k} = \left[ \begin{array}[pos]{c}
-\mathbf{x}_{k}\\
-\mathbf{\theta}_{k} \end{array} \right] .\] The change in model parameters occurs at a longer time scale than the model states. Therefore, for convenience, the model states and parameters are referred to as fast and slow states. The next issue to consider is the description of the dynamics for the slow states. Due to the prediction correction steps of the unscented Kalman filter these slow states can be assigned trivial dynamics such that
-\begin{align}
-\label{eqn: parameterdynamics}
-\mathbf{\theta}_{k+1} &= \mathbf{\theta}_{k} + \mathbf{\eta_{k}}\\
-E(\mathbf{\theta}_{k+1}) &= \mathbf{\theta}_{k}\\
-P_{\mathbf{\theta} \mathbf{\theta},k+1} &= \mathbf{\Psi},
-\end{align} where $E(\cdot)$ is the expectation function and $\mathbf{\eta}_{k} \sim N(0,\mathbf{\sigma})$.
+%The predictions of the states,$\overline{\mathbf{x}}_{k+1}^{-}$, and observations, $\overline{\mathbf{y}}_{k+1}^{-}$, now need to be corrected based on the observations. This is achieved by determining the Kalman gain and updating the predictions based on the current observation: \begin{align}
+%\mathbf{K} &= \mathbf{P}_{xy,k+1}^{-}(\mathbf{P}_{yy,k+1}^{-})^{-1}\\
+%\overline{\mathbf{x}}_{k+1} &= \overline{\mathbf{x}}_{k+1}^{-} + \mathbf{K}(\mathbf{y}_{k+1}-\overline{\mathbf{y}}_{k+1}^{-})\\
+%\mathbf{P}_{xx,k+1} &= \mathbf{P}_{xx,k+1}^{-} - \mathbf{K}(\mathbf{P}_{xy,k+1}^{-})^{\top},
+%\end{align} where $\mathbf{y}_{k}$ is the observation, $\overline{\mathbf{x}}_{k+1}$ is the corrected estimate of the state and $\mathbf{P}_{xx,k+1}$ is the estimate of its error. This set of equations describes the UKF and how it can be used to estimate states. However, for this study, estimation of states and parameters is required (dual estimation).
+
+
+%\red{Definition of slow state matrix and its dynamics}
+
+In this paper we are interested in estimating aspects of physiology that are unobserved making use of a neural mass model. In particular, we consider the estimation of the synaptic gains ($\alpha_{mn}$) from equation~\ref{eq:2ndOrderNMM}. To estimate model parameters they need to be augmented to the original state matrix and given dynamics. This model parameters can be assigned trivial dynamics due to the prediction correction nature of the unscented Kalman filter. By this we mean that the model parameter is assumed to be constant with some error assigned to it. This error allows this model parameter to have slow dynamics, and for it to track its true value. The change in model parameters occurs at a longer time scale than the model states. Therefore, for convenience, the model states and parameters are referred to as fast and slow states. 
 
 \red{Intialisation of UKF for stationary parameters}
 
