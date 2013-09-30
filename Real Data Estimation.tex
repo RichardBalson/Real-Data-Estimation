@@ -3,7 +3,7 @@
 
 %------------------------------------------------------------
 %
-\documentclass{article}%
+\documentclass[10pt]{article}%
 %Options -- Point size:  10pt (default), 11pt, 12pt
 %        -- Paper size:  letterpaper (default), a4paper, a5paper, b5paper
 %                        legalpaper, executivepaper
@@ -46,6 +46,17 @@
 \newenvironment{proof}[1][Proof]{\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
 
 \geometry{top=3cm,bottom=3cm,left=2.5cm,right=3.5cm}
+
+% Text layout
+\topmargin 0.0cm
+\oddsidemargin 0.5cm
+\evensidemargin 0.5cm
+\textwidth 16cm 
+\textheight 21cm
+
+% Bold the 'Figure #' in the caption and separate it with a period
+% Captions will be left justified
+\usepackage[labelfont=bf,labelsep=period,justification=raggedright]{caption}
 
 % \newcommand\iref{\textcolor{red}{ref}}
 \newcommand\red{\textcolor{red}}
@@ -157,7 +168,7 @@ The simplest possible neural mass model is one that takes an input firing rate, 
  \begin{figure}
  	\centering
  		\includegraphics{fig/Biological_Model.pdf}
- 	\caption{Graphical Description of the Neural Mass Model of the Hippocampus. (\textbf{A}) Graphical Description of the neural mass model of the hippocampus. }
+ 	\caption{Graphical Description of the Neural Mass Model of the Hippocampus. (\textbf{A}) Graphical description of the neural mass model of the hippocampus. In this figure the traingle, circle diamond and hexagon represent populations of pyramidal, spiny stellate and slow and fast inhbitory neurons. Synaptic connections are specified by a u shaped structure, where the secondary terminal has different shapes depending on the response of the synapse. The 'input' specified in the figure is a firing rate from other cortical regions connected to the modelled area. (\textbf{B}) Flow diagram of the of the neural mass model of the hippocampus. (\textbf{C}) Simplified graphical description of the neural mass model of the hippocampus.}
  	\label{fig: Biological}
  \end{figure}
 
@@ -226,7 +237,7 @@ Estimation techniques attempt to approximate the model states given some observa
 
 %\red{Definition of slow state matrix and its dynamics}
 
-In this paper we are interested in estimating aspects of physiology that are unobserved making use of a neural mass model. In particular, we consider the estimation of the synaptic gains ($\alpha_{mn}$) from equation~\ref{eq:2ndOrderNMM}. To estimate model parameters they need to be augmented to the original state matrix and given dynamics. This model parameters can be assigned trivial dynamics due to the prediction correction nature of the unscented Kalman filter. By this we mean that the model parameter is assumed to be constant with some error assigned to it. This error allows this model parameter to have slow dynamics, and for it to track its true value. The change in model parameters occurs at a longer time scale than the model states. Therefore, for convenience, the model states and parameters are referred to as fast and slow states. 
+In this paper we are interested in estimating aspects of physiology that are unobserved by making use of a neural mass model. In particular, we consider the estimation of the model's synaptic gains ($\alpha_{mn}$) from equation~\ref{eq:2ndOrderNMM}. To estimate model parameters they need to be augmented to the original state matrix and given dynamics. This model parameters can be assigned trivial dynamics due to the prediction correction nature of the unscented Kalman filter. By this we mean that the model parameter is assumed to be constant with some error assigned to it. This error allows this model parameter to have slow dynamics, and for it to track its true value. The change in model parameters occurs at a longer time scale than the model states. Therefore, for convenience, the model states and parameters are referred to as fast and slow states. 
 
 \red{Intialisation of UKF for stationary parameters}
 
@@ -241,7 +252,7 @@ In this paper we are interested in estimating aspects of physiology that are uno
 \begin{figure}
  	\centering
  		\includegraphics{fig/EEG.pdf}
- 	\caption{Recorded and Simulated EEG.}
+ 	\caption{Recorded and Simulated EEG. (\textbf{A}) Recorded EEG from an \textsl{in vivo} model of temporal lobe epilepsy. (\textbf{B}) Artificial EEG generated from the neural mass model of the hippocampus.}
  	\label{fig: EEG}
  \end{figure}
 
@@ -249,7 +260,7 @@ In this paper we are interested in estimating aspects of physiology that are uno
 \begin{figure}
  	\centering
  		\includegraphics{fig/SeizureComparison.pdf}
- 	\caption{Animal Comparison.}
+ 	\caption{Estimation Results for Multiple Animals. In the top graph artificial EEG using the neural mass model of the hippocampus is demonstrated. The parameters used for this simulation are the same as the results for seizure(SZ) one in this figure. The results from seizures for four different animals is demonstrated in this figure, each corresponding to a different color line. All seizure initiate at time 0s and end at the dotted line that is the same color as the estimation results for the animal.}
  	\label{fig: EEG}
  \end{figure}
 
@@ -257,7 +268,7 @@ In this paper we are interested in estimating aspects of physiology that are uno
  	\centering
 	 \vspace*{-2cm}
  		\includegraphics[max size={\textwidth}{\textheight}]{fig/SameInitEstResult.pdf}
- 	\caption{Results from the estimation of four seizures from four different animals . (\textbf{A}), (\textbf{B}), (\textbf{C}), (\textbf{D}) Estimation results for four seizures from animal 1-4, respectively. The colors in all graphs correspond to the legend above the figure. The first estimated seizure is shown in the top graph, where the initiation of seizure begins at time 0s and ends at the dotted black line. In the corresponding graphs the estimation results for the excitatory ($\alpha_{\mathrm{p}}$), slow inhibitory ($\alpha_{\mathrm{s}}$) and fast inhibitory ($\alpha_{\mathrm{f}}$) synaptic gains are demonstrated, where all seizures initiate at 0s and terminate at the dotted line with the same color. Lastly, the estimate for the mean input firing rate to the modeled population is demonstrated.}
+ 	\caption{Results from the estimation of four seizures from four different animals . (\textbf{A}), (\textbf{B}), (\textbf{C}), (\textbf{D}) Estimation results for four seizures(SZ) from animal 1-4, respectively. The colors in all graphs correspond to the legend above the figure. The first estimated seizure is shown in the top graph, where the initiation of seizure begins at time 0s and ends at the dotted black line. In the corresponding graphs the estimation results for the excitatory ($\alpha_{\mathrm{p}}$), slow inhibitory ($\alpha_{\mathrm{s}}$) and fast inhibitory ($\alpha_{\mathrm{f}}$) synaptic gains are demonstrated, where all seizures initiate at 0s and terminate at the dotted line with the same color. Lastly, the estimate for the mean input firing rate to the modeled population is demonstrated.}
  	\label{fig: EstimationResults}  
  \end{figure}
 
