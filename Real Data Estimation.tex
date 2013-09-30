@@ -115,9 +115,9 @@
 
 \subsection{Animal Model of Epilepsy}
 
-In this study we make use of an \textsl{in vivo} model of temporal lobe epilepsy. In particular, we consider the tetanus toxin model of temporal lobe epilepsy, where the hippocampus is the seizure focus. This particular model was chosen as it has a localised seizure focus, and results in the animals having seizure events that are similar in terms of electrophysiology and clinical aspects to human patients with temporal lobe epilepsy. 
+In this study we make use of an \textsl{in vivo} model of temporal lobe epilepsy. In particular, we consider the tetanus toxin model of temporal lobe epilepsy, with a hippocampal seizure focus. This particular model was chosen as it has a localised seizure focus, and results in the animals having seizure events that are similar to electrophysiological and clinical aspects of human patients with temporal lobe epilepsy. 
 
-For this particular \textsl{in vivo} model, Sprague Dawley rats that weigh between 300-400 grams are used, with the approval of an ethics committee. Tetanus toxin is injected into the hippocampus at the location of -3.5mm anterior-posterior (AP), 3mm medial lateral and -3.5mm dorsal ventral (DV). This location is within the CA3 region of the hippocampus (Figure~\ref{fig: TetLoc}). Two depth electrodes are placed in the same location to record local field potentials from the seizure focus. A further three burr holes are made, one over the cerebellum, and two over the right hemisphere of the brain. Three electrodes are placed in the burr holes: the cerebellar electrode is used as a reference for all differential recordings, and the two electrodes over the right hemisphere are used to record local filed potentials from the surface of the brain. These electrodes are then connected to a pedestal and held in place by dental cement. The animals are left to recover for seven days, and are then recorded from 24 hours a day for six weeks.
+For this particular \textsl{in vivo} model, Sprague Dawley rats that weigh between 300-400 grams are used. Tetanus toxin is injected into the hippocampus at the location of -3.5mm anterior-posterior (AP), 3mm medial lateral and -3.5mm dorsal ventral (DV). This location is within the CA3 region of the hippocampus (Figure~\ref{fig: TetLoc}). Two depth electrodes are placed in the same location to record local field potentials from the seizure focus. A further three burr holes are made, one over the cerebellum, and two over the right hemisphere of the brain. Three electrodes are placed in the burr holes: the cerebellar electrode is used as a reference for all differential recordings, and the two electrodes over the right hemisphere are used to record local filed potentials from the surface of the brain. These electrodes are then connected to a pedestal and held in place by dental cement. The animals are left to recover for seven days, and are then recorded from 24 hours a day for six weeks. All animal experiments are done under the approval of am ethics committee.
 
  
 
@@ -137,6 +137,12 @@ where $\alpha_{mn}$ is a measure of the connectivity and synaptic strength betwe
 \end{equation}
 where $\eta(t)$ is the Heaviside step function. An example of a post synaptic response kernel can be seen in Figure~\ref{fig: Simple}
 
+\begin{figure}
+	\centering
+		\includegraphics{Biological_Response.pdf}
+	\caption{Simple Neural Mass Model. (\textbf{A}) An example of a simple neural mass model. This model consists of a single neural population - the triangle - and a single synapse - the square block. (\textbf{B}) Temporal response curve for a synapse. The black line demonstrates the response of a synapse to an impulse response. The time constant ($\tau$) and synaptic gain ($\alpha$) are demonstrated in this figure. The peak response of this function is $\alpha \exp(-1)$ and the time at which this peak occurs is equal to $\tau$. (\textbf{C}) Somatic response curve. The black line indicates the function $g(v)$ which is a sigmoidal activation curve. This function demonstrates the resulting normalized firing rate produced by a neural population as a function of the membrane potential over it. In this figure $v_{0}$ is the membrane potential at which the firing rate produced is half its maximum.}
+	\label{fig: Simple}
+\end{figure}
 
 The firing rate of each population is determined from an asymmetric sigmoid activation curve. The sigmoid function translates the membrane potential of a population to its effective firing rate.
 \begin{align}\label{eq:sigmoid}
@@ -158,12 +164,15 @@ where $z_n(t)$ is the time derivative of $v_n(t)$. This forms the basis of a sta
 
 The simplest possible neural mass model is one that takes an input firing rate, and outputs a firing rate. A model of this is shown in Figure~\ref{fig: Simple}, where the effect of both the post synaptic response kernel and the sigmoidal activation curve are demonstrated.
 
-\begin{figure}
-	\centering
-		\includegraphics{Biological_Response.pdf}
-	\caption{Simple Neural Mass Model. (\textbf{A}) An example of a simple neural mass model. This model consists of a single neural population - the triangle - and a single synapse - the square block. (\textbf{B}) Temporal response curve for a synapse. The black line demonstrates the response of a synapse to an impulse response. The time constant ($\tau$) and synaptic gain ($\alpha$) are demonstrated in this figure. The peak response of this function is $\alpha \exp(-1)$ and the time at which this peak occurs is equal to $\tau$. \textbf{C} Somatic response curve. The black line indicates the function $g(v)$ which is a sigmoidal activation curve. This function demonstrates the resulting normalized firing rate produced by a neural population as a function of the membrane potential over it. In this figure $v_{0}$ is the membrane potential at which the firing rate produced is half its maximum.}
-	\label{fig: Simple}
-\end{figure}
+In figure~\ref{fig: Biological} the structure of the neural mass model of the hippocampus considered is shown. This model is an expansion of the simple model shown in figure~\ref{fig: Simple} where all somatic response curves are assumed to have the same functional description. However, each temporal response curve has a different time constant ($\tau$) and in this study we assume that the synaptic gains ($\alpha$) of the response curve are time varying and can account for the different dynamics observed in recorded EEG. This is similar to assuming that the synapse in the brain are current based rather than conductance based.   
+
+A further assumption made in this study is that all excitatory temporal response curves have the same description, that is:
+\begin{equation}\label{eq:ExcSynapse}
+    \alpha_{\mathrm{pe}} = \alpha_{\mathrm{ps}} = \alpha_{\mathrm{pf}} = \alpha_{\mathrm{ep}} = \alpha_{\mathrm{ip}}, \tau_{\mathrm{pe}} = \tau_{\mathrm{ps}} = \tau_{\mathrm{pf}} = \tau_{\mathrm{ep}} = \tau_{\mathrm{ip}},
+\end{equation} where p, e, s, and f represent the pyramidal, excitatory, slow inhibitory and fast inhibitory populations and i the input into the model. The same assumption is also made for the slow inhbitory temporal response curve
+		\begin{equation}\label{eq:InhSynapse}
+		\alpha_{\mathrm{sf}} = \alpha_{\mathrm{sp}}, \tau_{\mathrm{sf}} = \tau_{\mathrm{sp}}.
+\end{equation}  This assumption is made to reduce the effect of over-fitting the model to data, and to allow the estimation procedure to converge by limiting the number of physiological parameters to estimate. This assumption also allows for the original model to be reduced into a simpler form with fewer synaptic connections shown in Figure~\ref{fig: Biological}. In order to simplify notation all excitatory temporal response curves will be characterised by $\alpha_{p}$ and $\tau_{p}$, slow inhibitory by $\alpha_{s}$ and $\tau_{s}$ and fast inhibitory by $\alpha_{f}$ and $\tau_{f}$.
 
  \begin{figure}
  	\centering
