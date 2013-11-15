@@ -112,30 +112,31 @@ We begin by defining a generic non-linear system\begin{align}
 
 \red{Introduction to the UKF}
 
-Estimation techniques attempt to approximate the model states given some observation. There are numerous techniques to achieve this, most of which are for linear systems. We make use of a nonlinear estimation technique, the unscented Kalman filter. This method consists of two steps: prediction and correction. The prediction step makes use of an unscented transform (Figure~\ref{fig: UKF}) to approximate the mean and covariance of the states after they have been propagated through the model. The correction step then determines the most likely states that best describes both the observation and the model prediction. This step makes use of the expected error on both the observations and the states to determine a weighting for each (Figure~\ref{fig: UKF}).
+Estimation techniques attempt to approximate model states given some observation. There are numerous techniques to achieve this, most of which are for linear systems. We make use of a nonlinear estimation technique, the unscented Kalman filter. This method consists of two steps: prediction and correction. The prediction step makes use of an unscented transform (Figure~\ref{fig: UKF}) to approximate the mean and covariance of the states after they have been propagated through the model. The correction step then determines the most likely states that best describe both the observation and the model prediction. This step makes use of the expected error on both the observations and the states to determine how they are weighted for the corrected estimate~(Figure~\ref{fig: UKF}).
 
-The unscented transform makes the assumption that the distribution of states before and after they are propagated through the model are Gaussian (Figure~\ref{fig: UKF}). The first step in the unscented transform involves drawing sigma points - points one standard deviation away from the mean - from a Gaussian distribution, 
+The unscented transform makes the assumption that the distribution of states before and after they are propagated through the model are Gaussian (Figure~\ref{fig: UKF}). The first step in the unscented transform is the extraction of sigma points - points one standard deviation away from the mean - from a Gaussian distribution, 
 \begin{align}\label{eqn: SigmaP}
 \mathbf{\mathcal{X}}_{0} &= \mathbf{\overline{x}}_{k} \quad iff \quad \kappa >0\\
-\mathbf{\mathcal{X}}_{n,k} &= \mathbf{\overline{x}}_{k} \pm (\sqrt{\kappa+D_{x}\mathbf{P_{xx,k}}})_{n} \quad n=1,\hdots,D_x,
-\end{align} where $\mathbf{\mathcal{X}}_{n}$ represents the sigma points, $k$ the current sample, $\mathbf{\overline{x}}_{k}$ is the expected value of the state, $\mathbf{P_{xx,k}}$ is the covariance of the state and $D_{x}$ is the number of states in the system. This results in $2D_{x}$ sigma points. If $\kappa$ is greater than zero than the mean is also propagated through the model resulting in $2D_{x}+1$ sigma points. In general, the value of $\kappa$ is used to either scale up or scale down the effect of the mean on the unscented transform prediction. The notation $\sqrt{\cdot}_{n}$ is used to indicate the $n$th row of the matrix square root. 
+\mathbf{\mathcal{X}}_{n,k} &= \mathbf{\overline{x}}_{k} + (\sqrt{\kappa+D_{x}\mathbf{P_{xx,k}}})_{n} \quad n=1,\hdots,D_x,\\
+\mathbf{\mathcal{X}}_{n+D_x,k} &= \mathbf{\overline{x}}_{k} - (\sqrt{\kappa+D_{x}\mathbf{P_{xx,k}}})_{n} \quad n=1,\hdots,D_x,
+\end{align} where $\mathbf{\mathcal{X}}_{n}$ are the sigma points, $k$ the current sample, $\mathbf{\overline{x}}_{k}$ is the expected value of the state, $\mathbf{P_{xx,k}}$ is the covariance of the state and $D_{x}$ is the number of states in the system. This results in $2D_{x}$ sigma points. If $\kappa$ is greater than zero than the mean is also propagated through the model resulting in $2D_{x}+1$ sigma points. In general, the value of $\kappa$ is used to either scale up or scale down the effect of the mean on the unscented transform prediction. Here we assume that $\kappa$ is greater than zero. The notation $\sqrt{\cdot}_{n}$ is used to indicate the $n$th row of the matrix square root. 
 
 The next step of the unscented transform involves propagating the sigma points through the model, and using the results to evaluate the statistics of the prediction,
 \begin{align}\label{eqn: SigmaProp}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\mathbf{\mathcal{X}}_{n,k+1} &= \mathbf{\mathcal{X}}_{n,k}+ T(\mathbf{A}(\mathbf{\mathcal{X}}_{n,k}) +\mathbf{B}(\mathbf{u}_{k})) +\sqrt{T}{n}_{k}\\
+\mathbf{\mathcal{X}}_{n,k+1} &= \mathbf{\mathcal{X}}_{n,k}+ T(\mathbf{A}(\mathbf{\mathcal{X}}_{n,k}) +\mathbf{B}(\mathbf{u}_{k}))\\
 \label{eqn: PriorSMean}
 \overline{\mathbf{x}}_{k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=0}^{2D_{x}} \mathbf{\mathcal{X}}_{n,k+1}\\
 \label{eqn: PriorSCov}
 \mathbf{P}_{xx,k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=0}^{2D_{x}} (\mathbf{\mathcal{X}}_{n,k+1} -\mathbf{\overline{x}}_{k+1}^{-})(\mathbf{\mathcal{X}}_{n,k+1}-\mathbf{\overline{x}}_{k+1}^{-})^{\top} + \mathbf{Q},%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\end{align} $\mathbf{\mathcal{X}}_{n,k+1}$ are the propagated sigma points, $\overline{\mathbf{x}}_{k+1}^{-}$ and $\mathbf{P}_{xx,k+1}^{-}$ are the predictions for the state and state covariance matrices. The negative superscript is used to indicate an uncorrected prediction. The term $\mathbf{Q}$ is the expectation of the model error $n_{k}$ and $(\cdot)^{\top}$ a matrix transpose. In this step, we have made use of a first order Euler-Maruyama approximation to propagate the model states one sample forward. This involves scaling the data by the sampling period ($T$), and the variance in the model by its square root.
+\end{align} $\mathbf{\mathcal{X}}_{n,k+1}$ are the propagated sigma points, $\overline{\mathbf{x}}_{k+1}^{-}$ and $\mathbf{P}_{xx,k+1}^{-}$ are the predictions for the states and their covariances. The negative superscript is used to indicate an uncorrected prediction. The term $\mathbf{Q}$ is the expectation of the model error $n_{k}$ and $(\cdot)^{\top}$ a matrix transpose. In this step, we have made use of a first order Euler-Maruyama approximation to propagate the model states one sample forward. This involves scaling the data by the sampling period ($T$).
 
-From equations~\ref{eqn: SigmaProp}-\ref{eqn: PriorSCov} an expectation on the observed value can be determined. For a neural mass model the observation function is linear, so there is no need to propagate the prior distribution of model states through the observation function to determine the statistics of the prior estimate of the observation. Instead the statistics of the observation can be determined from the propagated sigma points,
+Using equations~\ref{eqn: SigmaProp}-\ref{eqn: PriorSCov} we can develol an expectation about the observation at the next time step. For a neural mass model the observation function is linear, so there is no need to propagate the prior distribution of model states through the observation function to determine the statistics of the prior estimate of the observation. Instead the statistics of the observation can be determined from the propagated sigma points,
 \begin{align}
-\mathbf{\mathcal{Y}}_{n,k+1} &= \mathbf{C}(\mathbf{\mathcal{X}}_{n,k+1})+ \mathbf{D}(\mathbf{u}_{k})+ \sqrt{T}\mathbf{r}_{k}\\
-\overline{\mathbf{y}}_{k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} \mathbf{\mathcal{Y}}_{n,k+1}\\
+\mathbf{\mathcal{Y}}_{n,k+1} &= \mathbf{C}(\mathbf{\mathcal{X}}_{n,k+1})+ \mathbf{D}(\mathbf{u}_{k})\\
+\overline{\mathbf{y}}_{k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=0}^{2D_{x}} \mathbf{\mathcal{Y}}_{n,k+1}\\
 \label{eqn: statecovg}
-\mathbf{P}_{xy,k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} (\mathbf{\mathcal{X}}_{n,k+1}-\overline{\mathbf{x}}_{n,k+1}) (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-})^{\top}\\
-\mathbf{P}_{yy,k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-}) (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-})^{\top} +\mathbf{R},%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mathbf{P}_{xy,k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=0}^{2D_{x}} (\mathbf{\mathcal{X}}_{n,k+1}-\overline{\mathbf{x}}_{n,k+1}) (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-})^{\top}\\
+\mathbf{P}_{yy,k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=0}^{2D_{x}} (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-}) (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-})^{\top} +\mathbf{R},%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{align} where $\mathbf{\mathcal{Y}}_{n,k+1}$ are the predicted observations from all the sigma points, and $\overline{\mathbf{y}}_{k+1}^{-}$ and $\mathbf{P}_{yy,k+1}^{-}$ are the predictions for the model output and its covariance, respectively. The covariance matrix of the states and observations are $\mathbf{P}_{xy,k+1}^{-}$ and $\mathbf{R}$ is the expectation of the observation error $\mathbf{r}_{k}$.
 
 In the correction step we make use of the knowledge of our prior distribution on states and the observations, as well as there expected value, and compare this to the experimental observation to improve our prediction. This is achieved using the standard formulation of the Kalman filter correction step,
@@ -143,7 +144,7 @@ In the correction step we make use of the knowledge of our prior distribution on
 \mathbf{K} &= \mathbf{P}_{xy,k+1}^{-}(\mathbf{P}_{yy,k+1}^{-})^{-1}\\
 \overline{\mathbf{x}}_{k+1} &= \overline{\mathbf{x}}_{k+1}^{-} + \mathbf{K}(\mathbf{y}_{k+1}-\overline{\mathbf{y}}_{k+1}^{-})\\
 \mathbf{P}_{xx,k+1} &= \mathbf{P}_{xx,k+1}^{-} - \mathbf{K}(\mathbf{P}_{xy,k+1}^{-})^{\top},
-\end{align} where $\mathbf{y}_{k}$ is the observation, $\overline{\mathbf{x}}_{k+1}$ is the corrected estimate of the state and $\mathbf{P}_{xx,k+1}$ is the estimate of its error.
+\end{align} where $\mathbf{y}_{k+1}$ is the observation, $\overline{\mathbf{x}}_{k+1}$ is the corrected estimate of the state and $\mathbf{P}_{xx,k+1}$ its covariance.
 
  \begin{figure}
  	\centering
@@ -152,27 +153,11 @@ In the correction step we make use of the knowledge of our prior distribution on
  	\label{fig: UKF}
  \end{figure}
 
-%\mathbf{\mathcal{Y}}_{n,k+1} &= \mathbf{\mathcal{Y}}_{n,k} + T(\mathbf{C}(\mathbf{\mathcal{X}}_{n,k+1})+ \mathbf{D}(\mathbf{u}_{k}))+ \sqrt{T}\mathbf{r}_{k}\\
-%\overline{\mathbf{y}}_{k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} \mathbf{\mathcal{Y}}_{n,k+1}\\
-%\label{eqn: statecovg}
-%\mathbf{P}_{xy,k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} (\mathbf{\mathcal{X}}_{n,k+1}-\overline{\mathbf{x}}_{n,k+1}) (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-})^{\top}\\
-%\mathbf{P}_{yy,k+1}^{-} &= \frac{1}{2D_{x}+\kappa}\sum_{n=1}^{2D_{x}} (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-}) (\mathbf{\mathcal{Y}}_{n,k+1}-\overline{\mathbf{y}}_{k+1}^{-})^{\top} +\mathbf{R},%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\end{align} where $\overline{\mathbf{y}}_{k+1}^{-}$ and $\mathbf{P}_{yy,k+1}^{-}$ are the predictions for the model output and its covariance, respectively. $\mathbf{P}_{xy,k+1}^{-}$ is the covariance matrix of the states and observations and $\mathbf{R}$ is the expectation of the observation error $\mathbf{r}_{k}$.
-
-
-%\red{How states are predicted using the unscented transform}
-
-%The predictions of the states,$\overline{\mathbf{x}}_{k+1}^{-}$, and observations, $\overline{\mathbf{y}}_{k+1}^{-}$, now need to be corrected based on the observations. This is achieved by determining the Kalman gain and updating the predictions based on the current observation: \begin{align}
-%\mathbf{K} &= \mathbf{P}_{xy,k+1}^{-}(\mathbf{P}_{yy,k+1}^{-})^{-1}\\
-%\overline{\mathbf{x}}_{k+1} &= \overline{\mathbf{x}}_{k+1}^{-} + \mathbf{K}(\mathbf{y}_{k+1}-\overline{\mathbf{y}}_{k+1}^{-})\\
-%\mathbf{P}_{xx,k+1} &= \mathbf{P}_{xx,k+1}^{-} - \mathbf{K}(\mathbf{P}_{xy,k+1}^{-})^{\top},
-%\end{align} where $\mathbf{y}_{k}$ is the observation, $\overline{\mathbf{x}}_{k+1}$ is the corrected estimate of the state and $\mathbf{P}_{xx,k+1}$ is the estimate of its error. This set of equations describes the UKF and how it can be used to estimate states. However, for this study, estimation of states and parameters is required (dual estimation).
-
 
 %\red{Definition of slow state matrix and its dynamics}
 
-In this paper we are interested in estimating aspects of physiology that are unobserved by making use of a neural mass model. In particular, we consider the estimation of the model's synaptic gains ($\alpha$). To estimate model parameters they need to be augmented to the original models state matrix, and given dynamics. This model parameters can be assigned trivial dynamics due to the prediction correction nature of the unscented Kalman filter. By this we mean that the model parameter is assumed to be constant with some error assigned to it. This error allows this model parameter to have slow dynamics, and for it to track its true value. The change in model parameters occurs at a longer time scale than the model states. Therefore, for convenience, the model states and parameters are referred to as fast and slow states, respectively. 
+In this paper we are interested in estimating aspects of physiology that are unobserved by making use of a neural mass model. In particular, we consider the estimation of the model's synaptic gains ($\alpha$). To estimate model parameters they need to be augmented to the original models state matrix, and given dynamics. The model parameters can be assigned trivial dynamics due to the prediction correction nature of the unscented Kalman filter. By this we mean that the model parameter are assumed to be constant with some error assigned to it. The error assigned to each parameter allows each observation made to be used to determine what are the most likely model parameters that describe it. This technique allows the model parameters to slowly vary with each observation made and track their true values. The change in model parameters occurs at a longer time scale than the model states. Therefore, for convenience, the model states and parameters are referred to as fast and slow states, respectively. 
 
-As a further addition, we consider that the mean input firing rate to the modeled cortical region is also slowly varying. This addition is allows us to determine the effect of other cortical regions on the seizure focus during the transition to seizure.
+As a further addition, we consider that the mean input firing rate to the modeled cortical region is also slowly varying. This addition allows us to estimate the effect of other cortical regions on the seizure focus during the transition to seizure.
 
-In the results section we demonstrate three aspects of modeling: model validation, model fitting and validating fit estimated model parameters. To demonstrate that the model is valid for the type of data we are considering a comparison between the model output and recorded EEG is required. Following this we fit the synaptic gains and input mean to the recorded data, and then pass these estimated parameters through the model to demonstrate that the fit model parameters are indeed capable of replicating the recorded EEG.
+In the results section we demonstrate three key components for any estimation procedure using computational models: model selection, model fitting and estimation validation. To demonstrate that the computational model is descriptive of the type of data we are considering a comparison between the model output and recorded EEG is required. Following this, we fit the synaptic gains and input mean of the computational model to the recorded data. Lastly, we use the estimated model parameters to simulate the recorded EEG using the computational model. We then compare the characteristics of the simulated EEG to the recorded data from the \textsl{in-vivo} model.
