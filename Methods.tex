@@ -10,6 +10,13 @@ Sprague Dawley rats~(300-400 grams) are injected with $0.4-0.6\mu l$ of tetanus 
 
 \subsection{Neural Mass Model} 
 
+\red{Methods} The delay specifies the time taken for action potentials to propagate from one population to the next through dendritic trees, and the synaptic gain is a measure of the membrane potential magnitude resulting from a single action potential arriving at the considered population.
+The firing rate specifies the average number of action potentials generated from the considered population. The second function is modeled as a sigmoid, which was originally formulated to describe the probability of a neuron firing given a specific membrane potential. In this case, population dynamics are considered; therefore, the sigmoid output is a firing rate, which is dependant on a population's membrane potential. Lastly, the number of synaptic connections linking neural populations together is specified by a connectivity constant.
+\red{This model is capable of replicating key characteristics observed in EEG prior to and during seizure.}
+
+The Wendling model is capable of replicating key features observed in EEG prior to, during, and after seizures. This is achieved by altering physiological parameters that describe the balance between excitation and inhibition in the modeled region of the brain. Due to its description of neuronal connections and systems in terms of neural populations, the model only has ten parameters, of which three describe the balance between excitation and inhibition \citep{wendling2002epileptic}. By altering the three parameters describing the balance between inhibition and excitation almost all phenomena in EEG can be mimicked. Therefore, to imitate the observed output of iEEG, it is necessary to be able to estimate these three model parameters.
+ 
+
 All neural field models can be described by a temporal and spatial response curve, and a function that relates membrane potentials to firing rates. For neural mass models the spatial element is assumed to be constant due to the cortical area considered being small. The general description can therefore be described by a convolution integral over time,
 
 \begin{equation}\label{eq:conv_eq}

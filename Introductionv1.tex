@@ -1,0 +1,48 @@
+\section{Introduction}
+
+\red{Aims}
+
+\red{Estimate model parameters from a neural mass model of the hippocampus.}
+Approximately 1\% of the world's population are affected by epilepsy, of which a third ($\pm20$ million people) are refractory to current treatments. The difficulty in treating epilepsy is partially due to the inhomogeneous nature of the disorder and partially due to our lack of understanding of the mechanisms involved in the initiation and termination of seizures. In this paper, a new method to estimate neural dynamics is introduced. We apply an unscented Kalman filter~\citep{voss2004nonlinear} to estimate physiologically relevant parameters, from a neural mass model of the hippocampus~\citep{wendling2002epileptic}, using EEG recordings. We hypothesize that, using the unscented Kalman filter, parameters from the Wendling model can be tracked with noisy electrographic recordings from an \textsl{in-vivo} model of focal epilepsy.
+
+\red{To improve the understanding of epilepsy}
+Epilepsy is characterised by the occurrence of recurrent unprovoked seizures. Numerous studies have attempted to prove insight into the underlying mechanisms involved in seizure, with the assumption that all epileptic pathologies have similar transitions to seizure. Under this assumption it would be reasonable to assume that the a single treatment would work equally as well on all patients; this is not the case. Therefore, we hypothesize that the mechanisms involved in the transition and termination of seizure are not unique. To demonstrate this, we fit recorded data from an \textsl{in-vivo} model of epilepsy to a computational model describing the dynamics of neural masses.
+
+\red{\textsl{In-vivo} model background}
+
+It is important for this study that the \textsl{in-vivo} model of epilepsy has a reproducible seizure focus. This is required to demonstrte that with the same type of epilepsy there may be different seizure mechanisms. Many different types of \textsl{in-vivo} models of epilepsy exist, but few have a reproducible pathology. In this study, we make use of the tetanus toxin model of focal temporal lobe epilepsy. In this model a small area of the brain, in the hippocampus, is injected with tetanus toxin, resulting in a small and repeatable seizure focus~\citep{jefferys1995chronic}. Other \textsl{in-vivo} models of epilepsy often result in a greater number of seizures that last for longer durations. However, the damage to the brain caused by these methods is often not repeatable \red{ref}.  
+
+\red{How has this been achieved previously?}
+
+\red{Introduction to neural mass model, freeman, jansen etc}
+Neural mass models, originally formulated in the early 1970's~\citep{wilson1973mathematical,lopes1974model,freeman1963electrical} and developed subsequently~\citep{jansen1995electroencephalogram,wendling2002epileptic}, describe a cortical region of the brain as having populations of inhibitory and excitory neurons. The average dynamics of the soma and synapses of neural populations are modeled by two functions. The first function describes how a synapse reacts to an firing rate in terms of a propagation delay and a synaptic gain, and takes the form of an integral kernel. The second function is nonlinear and describes how the membrane potential of each neural population is converted into a firing rate. These models have been shown to be capable of replicating intracranial EEG dynamics by altering a few model parameters describing the interaction of excitory and inhibitory populations. The output of a neural mass models is the membrane potential over the pyramidal population, which is the main excitory element in the model. Pyramidal neurons have similar orientations, and there electric field are therefore additive \red{ref}. Other populations in the model have a random orientation and therefore their net effect on the output of the model is minimal.
+
+\red{Inadequacy of jansen model}
+A model proposed by ~\cite{jansen1995electroencephalogram} was shown to be capable of replicating normal EEG as well as alpha waves by altering a subset of its model parameters. Further studies have shown that by altering different parameters the model could replicate almost all activity observed in EEG \red{ref}. 
+
+\red{intro to the wendling model}
+In this study recording will be made from the seizure focus, the hippocampus. When considering the hippocampus, a study performed by \cite{white2000networks} showed that the effect of inhibition on the pyramidal population had two distinctly different propagation delays, and that both were significant. They hypothesised that the cause of the two different propagation delays were due to the location of the synapses connecting the inhibitory and pyramidal populations. Longer propagation delays are due to synapse connections far from the soma (peri-dendritic), and shorter delays are due to connections near the soma (peri-somatic). The different propagation delays of inhibitory populations in the hippocampus was incorporated into a neural mass model by \cite{wendling2002epileptic}. To account for the two propagation delays, two different types of inhibitory populations were included in the computational model: one fast (peri-somatic), and the other slow (peri-dendritic). The addition of the fast inhibitory population made it possible to replicate almost all types of observed EEG by altering three model parameters. The model also includes a stochastic input with a nonzero mean, that accounts for the unknown effect of other populations on the considered neural mass.  
+
+\red{Is the Wendling model a good model}
+%The Wendling model is capable of mimicking the key features observed in hippocampal EEG \red{ref}, and has a strong link to the physiology. One further advantage of this model is that only three parameters need to be altered to mimic EEG, \red{which will allow for more accurate estimation. The reason for this is that as the number of parameters estimated increases so does the complexity and inaccuracy of estimation. This is in particularly important when considered estimation of real data, where the model is merely an approximation of the observations. If the number of parameters is large for this estimation there is bound to be large errors, due to numerous local minima in the cost function.}
+
+\red{Needs a lot of work from here}
+
+\red{Previous work on estimating the neural mass model of the hippocampus has been done using a genetic algorithm.}
+
+\red{Estimation of the neural mass model (Genetic Algorithm)}
+
+The nonlinear nature of the Wendling model makes estimation non-trivial. This difficulty is further compounded by the stochastic input in the model. The Wendling model has previously been estimated using a genetic algorithm~\citep{wendling2005interictal}, which is capable of estimating model parameters iteratively. However, this estimation technique requires periods of data that are stationary, which is highly unlikely in the brain. Further, the dynamics of the estimated parameters are lost due to estimation of over longer periods of recordings. These parameter dynamics may be key to understanding the difference between seizures in different subjects.
+
+\red{Kalman filter}
+A second possibility is the Kalman filter that can estimate model parameters in real time. The Kalman filter updates model parameters based on each observation made. However, the Kalman filter can only be applied to linear system estimation. By adding a unscented transform \red{ref} in the prediction step of the Kalman filter nonlinear model dynamics can be successfully approximated \red{ref}. This estimation technique is refereed to as the unscented Kalman filter. 
+
+\red{Why the Kalman filter}
+The advantage of the unscented Kalman filter over the genetic algorithm is that there is no requirement that the observations are stationary, as it can track the changes in model parameters. This is important as subtle changes in model parameters may give an indication of when a seizure is about to occur, and could provide evidence of the effect of therapeutic treatments on the brain's physiology. These features of the unscented Kalman filter may allow for it to be implemented in applications such as seizure prediction and responsive stimulation This is not possible using the genetic algorithm. The problem with the unscented Kalman filter is that the algorithm is not guaranteed to converge. 
+
+\red{What is being done, and why is it better or different?}
+
+In this paper, the application of the unscented Kalman filter for the estimation of the three parameters from the Wendling model describing the balance between excitation and inhibition is considered. Initially, EEG is simulated using the Wendling model, which is then used as the observations for the estimation procedure. Model parameters are then estimated, under the assumption that they were originally unknown. The robustness of the estimation procedure is determined by evaluating the accuracy of estimation under conditions where observation noise is varied and states are initialised with of errors from their actual values.
+
+\red{Structure of the paper}
+In the methods section, a description of the neural mass model of the hippocampus is presented. Further, the formulation of the unscented Kalman filter for the Wendling model is described. In the results section, the estimation of recorded seizures from the \textsl{in-vivo} model of epilepsy is shown, and further validation is shown to demonstrate the ability of the unscented Kalman filter to track intracranial EEG dynamics. 
